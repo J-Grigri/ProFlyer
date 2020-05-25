@@ -3,6 +3,7 @@ const User = require("../models/User");
 const gravatar = require('gravatar');
 const catchAsync = require("../utils/catchAsync")
 
+
 //Delete a user
 const { deleteOne } = require("./handlerFactory");
 exports.deleteUser = deleteOne(User);
@@ -11,15 +12,16 @@ const { updateOne } = require("./handlerFactory");
 exports.updateUser = updateOne(User)
 
 exports.registerUser = async (req, res) => {
-    const { name, email, password, isCoach } = req.body
+    const { name, email, password } = req.body
+    console.log("BOOOOOOOOO", req.body)
     try {
         const avatar = gravatar.url(email, {
             s: '200',//size
             r: 'pg',//rating
             d: 'mm'
         }, true)
-        const user = await User.create({ name, email, password, avatar, isCoach })
-        const token = user.generateToken();
+        const user = await User.create({ name, email, password, avatar })
+        const token = await user.generateToken();
         res.status(201).json({ status: "Success", data: { user, token } })
     } catch (err) {
         console.log(err)
@@ -27,13 +29,9 @@ exports.registerUser = async (req, res) => {
     }
 };
 
+//Read user profile
 exports.getUserProfile = catchAsync(async (req, res) => {
-
-    const profile = await User.find({ id: req.user.id })
-        .populate('User', ['name', 'avatar'])
-    if (!profile) {
-        res.status(404).json({ status: "fail", message: "There is no profile for this user" })
-    }
+    const profile = await User.findOne({ _id: req.user._id }, "name email _id")
     return res.status(200).json({ status: "Success", data: profile })
 })
 

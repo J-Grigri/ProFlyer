@@ -2,9 +2,11 @@ const express = require('express')
 const router = express.Router();
 const app = express();
 const mongoose = require("mongoose");
+const passport = require("./auth/index");
 
 require("dotenv").config({ path: ".env" });
-
+const cors = require("cors")
+app.use(cors())
 mongoose.connect(process.env.DB_LOCAL, {
     // some options to deal with deprecated warning, you don't have to worry about them.
     useCreateIndex: true,
@@ -21,13 +23,12 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 // use router
 app.use(router);
-
+app.use(passport.initialize());
 
 router.get('/', (req, res) => res.send("API running"))
 //all routers
-router.use("/users", require('./routers/userRouter'))
 router.use("/auth", require('./routers/authRouter'))
-// router.use("/profile", require('./routers/profile'))
+router.use("/users", require('./routers/userRouter'))
 router.use("/camps", require('./routers/campRouter'))
 
 
@@ -38,5 +39,4 @@ app.use(errorHandler)
 const AppError = require('./utils/appError')
 
 
-const PORT = process.env.PORT || 5000
-app.listen(PORT, () => console.log(`Server started on port ${PORT}`))
+module.exports = app

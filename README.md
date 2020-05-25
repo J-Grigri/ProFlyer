@@ -3,7 +3,7 @@
 **Description:**
 _ProFlyer platform intends to bring together pro skydivers as well as indoor wind tunnel flyers. On the platform users can find relevant content and most importantly information about coaches worldwide_
 
-- Estimated hours spend on project = 20(3 days)
+- Estimated hours spend on project = 45
 
 to do:
 

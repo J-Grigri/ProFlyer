@@ -1,7 +1,6 @@
 const User = require('../models/User')
 const jwt = require('jsonwebtoken')
 
-
 exports.login = async function (req, res) {
     try {
         const { email, password } = req.body;
@@ -9,7 +8,7 @@ exports.login = async function (req, res) {
         //authenticate user
         const user = await User.loginWithEmail(email, password);
         const token = await user.generateToken()
-
+        console.log(user)
         res.status(200).json({ status: "Success", data: { user, token } })
     } catch (err) {
         console.log("login errors", err) // =>> to see the stack
@@ -19,9 +18,8 @@ exports.login = async function (req, res) {
 exports.logout = async function (req, res) {
     try {
         const token = req.headers.authorization.replace("Bearer ", "");
-        req.user.tokens = req.user.tokens.filter(el => el !== token);
-        await req.user.save();
-        res.status(204).json({ status: "Log out successful", data: null })
+        const user = await User.updateOne({ _id: req.user._id }, { $pull: { tokens: token } });
+        res.status(204).json({ status: "Success", data: null })
     } catch (err) {
         res.status(401).json({ status: "fail", message: err.message });
     }

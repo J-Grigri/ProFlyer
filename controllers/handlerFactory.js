@@ -53,9 +53,9 @@ exports.updateOne = Model => catchAsync(async (req, res, next) => {
         case "User":
             allows = [
                 "name",
-                "email",
                 "password",
                 "avatar",
+                "isCoach",
                 "profile",
                 "profile.bio",
                 "profile.location",
@@ -98,14 +98,9 @@ exports.updateOne = Model => catchAsync(async (req, res, next) => {
             delete req.body[el]
         }
     });
-    // await item.save()
 
-    const item = await Model.findOneAndUpdate({ _id: id }, req.body)
+    const item = await Model.findOneAndUpdate({ _id: id }, req.body, { new: true })
 
     res.status(200).json({ status: "ok", data: item })
-    // exports.newItem = await Model.findOneAndUpdate(
-    //     { _id: id }, 
-    //     req.body, 
-    //     { new: true })
-    // res.status(200).json({ status: "ok", data: newItem })
+
 })

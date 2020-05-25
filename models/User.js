@@ -24,11 +24,16 @@ const userSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: [true, "Password must be at least 6 characters long"],
-        minLnegth: 6
+        required: [true, "Password must be at least 6 characters longgggggg"],
+        // minLength: 6
     },
     isCoach: {
-        type: Boolean
+        type: Boolean,
+        default: false
+    },
+    isVerified: {
+        type: Boolean,
+        default: false
     },
     avatar: {
         type: String
@@ -125,14 +130,20 @@ userSchema.methods.generateToken = async function () {
     const token = jwt.sign({ id: user._id }, process.env.SECRET, { expiresIn: '7d' });
     //save in the db
     user.tokens.push(token);
-    await user.save();
+    await user.save({ validateBeforeSave: false });
     return token;
     console.log(token)
 };
-
-
-
-
+//Create or query the user and generate token:
+userSchema.statics.findOneOrCreate = async function (email, name) {
+    let found = await this.findOne({ email: email });
+    if (!found) {
+        found = new this({ email: email, name: name });
+    }
+    found.token = await found.generateToken();
+    console.log(found)
+    return found;
+};
 
 const User = mongoose.model("User", userSchema);
 module.exports = User;
