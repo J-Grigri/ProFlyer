@@ -53,21 +53,21 @@ exports.updateOne = Model => catchAsync(async (req, res, next) => {
         case "User":
             allows = [
                 "name",
-                "password",
-                "avatar",
-                "isCoach",
-                "profile",
-                "profile.bio",
+                "profile.avatar",
                 "profile.location",
-                "profile.company",
                 "profile.disciplines",
-                "profile.numberOfJumps",
+                "profile.skydiveLicence",
                 "profile.tunnelHours",
-                "profile.yearsInSport",
                 "profile.social.youtube",
                 "profile.social.twitter",
                 "profile.social.facebook",
-                "profile.social.instagram"
+                "profile.social.instagram",
+                "coach.bio",
+                "coach.inSportSince",
+                "coach.certifications",
+                "coach.achievements",
+                "coach.experience",
+                "coach.disciplines",
             ]
             id = req.user._id
             break;
@@ -75,13 +75,16 @@ exports.updateOne = Model => catchAsync(async (req, res, next) => {
         case "Camp":
             console.log("BOOOOM", req.params.cardID)
             allows = [
+                "isSkydiveCamp",
+                "isTunnelCamp",
+                "disciplines",
                 "title",
-                "img",
+                "venue",
+                "startDate",
+                "endDate",
+                "groupSize",
                 "description",
                 "price",
-                "disciplines",
-                "groupSize",
-                "availability"
             ]
             id = req.params.campID
             break;

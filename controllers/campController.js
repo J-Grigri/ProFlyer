@@ -18,27 +18,32 @@ exports.getUserCamps = catchAsync(async (req, res) => {
 })
 
 exports.createCamp = catchAsync(async function (req, res, next) {
+    const organizer = req.user._id
     const {
-        organizer,
+        isSkydiveCamp,
+        isTunnelCamp,
+        disciplines,
         title,
-        img,
+        venue,
+        startDate,
+        endDate,
+        groupSize,
         description,
         price,
-        disciplines,
-        groupSize,
-        availability
     } = req.body
 
     const camp = await Camp.create({
         organizer,
+        isSkydiveCamp,
+        isTunnelCamp,
+        disciplines,
         title,
-        img,
+        venue,
+        startDate,
+        endDate,
+        groupSize,
         description,
         price,
-        disciplines,
-        groupSize,
-        availability
     })
     return res.status(201).json({ status: "Success", data: camp })
-
 })

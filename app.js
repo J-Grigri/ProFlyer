@@ -30,6 +30,7 @@ router.get('/', (req, res) => res.send("API running"))
 router.use("/auth", require('./routers/authRouter'))
 router.use("/users", require('./routers/userRouter'))
 router.use("/camps", require('./routers/campRouter'))
+router.use("/disciplines", require('./routers/disciplinesRouter'))
 
 
 // error middleware that will capture errors from 404 handler
@@ -37,6 +38,5 @@ const errorHandler = require('./utils/errorHandler')
 app.use(errorHandler)
 
 const AppError = require('./utils/appError')
-
 
 module.exports = app

@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const validator = require('validator');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken')
+const Disciplines = require("./Disciplines")
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -35,32 +36,24 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    avatar: {
-        type: String
-    },
     tokens: [{
         type: String
     }],
     profile: {
-        bio: {
+        avatar: {
             type: String
         },
         location: {
             type: String
         },
-        company: {
+        disciplines: {
+            type: mongoose.Schema.ObjectId,
+            ref: "Disciplines",
+        },
+        skydiveLicence: {
             type: String
         },
-        disciplines: {
-            type: [String]
-        },
-        numberOfJumps: {
-            type: Number
-        },
         tunnelHours: {
-            type: Number
-        },
-        yearsInSport: {
             type: Number
         },
         social: {
@@ -77,6 +70,26 @@ const userSchema = new mongoose.Schema({
                 type: String
             }
         },
+    },
+    coach: {
+        bio: {
+            type: String
+        },
+        inSportSince: {
+            type: Number
+        },
+        certifications: {
+            type: [String]
+        },
+        achievments: {
+            type: [String]
+        },
+        experience: {
+            type: [String]
+        },
+        disciplines: {
+            type: [String]
+        }
     }
 }, {
     // add createdAt and updatedAt from mongoose
@@ -95,6 +108,7 @@ userSchema.methods.toJSON = function () {
     delete userObject.updatedAt;
 
     return userObject;
+    console.log("userObject from User model", userObject)
 }
 
 //encrypt password before storing it

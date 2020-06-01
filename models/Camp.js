@@ -7,46 +7,56 @@ const campSchema = new Schema({
     organizer: {
         type: Schema.Types.ObjectId,
         ref: 'User',
-        required: [true, "Tour must have an user"],
+        required: [true, "Camp must have an organizer"],
     },
     title: {
         type: String,
-        required: [true, "User must have a name"],
+        required: [true, "Camp must have a title"],
         trim: true,
+    },
+    startDate: {
+        type: String,
+    },
+    endDate: {
+        type: String,
     },
     img: {
         type: String,//CHANGE AFTER TESTING
     },
     description: {
         type: String,
-        required: true,
+        // required: true,
         minLength: 10
     },
     price: {
         type: Number,
-        required: [true, "Camp must have a price"],
+        // required: [true, "Camp must have a price"],
         min: [0, "Camp price must be 0 or higher"]
     },
-    disciplines: [
-        {
-            // type: mongoose.Schema.ObjectId,
-            // ref: "Category",
-            // require: [true, "Tour must have at least one category"]
-        }
-    ],
+    disciplines: {
+        type: String
+    },
+    venue: {
+        type: String,
+        required: [true, "Camp must have a venue"]
+    },
     isSkydiveCamp: {
         type: Boolean,
-        required: [true, "Select camp type"],
-
+        // required: [true, "Camp type is required"],
+    },
+    
+    isTunnelCamp: {
+        type: Boolean,
+        // required: [true, "Camp type is required"],
     },
     groupSize: {
         type: Number,
-        required: [true, "Camp must have a group size"],
+        // required: [true, "Camp must have a group size"],
         min: [1, "Group size must be greater than 1"]
     },
     availability: {
         type: Number,
-        required: [true, "Please indicate number of available spots in the camp"],
+        // required: [true, "Please indicate number of available spots in the camp"],
         min: [0, "Minimum of one free spot"]
     },
 }, {
