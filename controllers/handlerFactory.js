@@ -49,6 +49,7 @@ exports.updateOne = Model => catchAsync(async (req, res, next) => {
 
     let allows = []
     let id;
+    console.log(req.body)
     switch (Model.modelName) {
         case "User":
             allows = [
@@ -58,10 +59,12 @@ exports.updateOne = Model => catchAsync(async (req, res, next) => {
                 "profile.disciplines",
                 "profile.skydiveLicence",
                 "profile.tunnelHours",
+
                 "profile.social.youtube",
                 "profile.social.twitter",
                 "profile.social.facebook",
                 "profile.social.instagram",
+
                 "coach.bio",
                 "coach.inSportSince",
                 "coach.certifications",
@@ -97,11 +100,12 @@ exports.updateOne = Model => catchAsync(async (req, res, next) => {
 
     // return array of fields inside req.body
     Object.keys(req.body).forEach(el => {
+        console.log(el, "keyname")
         if (!allows.includes(el)) {
             delete req.body[el]
         }
     });
-
+    console.log(req.body, "dsadsadsadsa")
     const item = await Model.findOneAndUpdate({ _id: id }, req.body, { new: true })
 
     res.status(200).json({ status: "ok", data: item })

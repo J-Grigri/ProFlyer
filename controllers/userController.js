@@ -32,8 +32,10 @@ exports.registerUser = async (req, res) => {
 
 //Read user 
 exports.getUser = catchAsync(async (req, res) => {
-    const user = await User.findOne({ _id: req.user._id }, "name email _id coach")
-    return res.status(200).json({ status: "Success", data: user })
+    // console.log(req.user)
+    // const user = await User.findOne({ _id: req.user._id }, "")
+    // console.log(user)
+    return res.status(200).json({ status: "Success", data: req.user })
 })
 
 // list of all coaches
@@ -94,7 +96,6 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 exports.changePassword = catchAsync(async (req, res, next) => {
     const { urlToken } = req.params
     const { password } = req.body
-    console.log(password)
     const decoded = jwt.verify(urlToken, process.env.SECRET)
 
     const user = await User.findOne({ email: decoded.email })
@@ -122,6 +123,6 @@ exports.changePW = async function (req, res) {
         res.status(200).json({ status: "Success", data: user })
     } catch (err) {
         console.log(err)
-        res.status(400).json({ status: "fail here", message: err.message })
+        res.status(400).json({ status: "Password change failed", message: err.message })
     }
 }

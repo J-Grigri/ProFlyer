@@ -41,58 +41,85 @@ const userSchema = new mongoose.Schema({
     }],
     profile: {
         avatar: {
-            type: String
+            type: String,
+            default: ""
+
         },
         location: {
-            type: String
+            type: String,
+            default: ""
+
         },
         disciplines: {
             type: mongoose.Schema.ObjectId,
             ref: "Disciplines",
         },
         skydiveLicence: {
-            type: String
+            type: String,
+            default: ""
+
         },
         tunnelHours: {
-            type: Number
+            type: String,
+            default: ""
+
         },
         social: {
             youtube: {
-                type: String
+                type: String,
+                default: ""
+
             },
             twitter: {
-                type: String
+                type: String,
+                default: ""
+
             },
             facebook: {
-                type: String
+                type: String,
+                default: ""
+
             },
             instagram: {
-                type: String
+                type: String,
+                default: ""
+
             }
         },
     },
     coach: {
         bio: {
-            type: String
+            type: String,
+            default: ""
+
         },
         inSportSince: {
-            type: Number
-        },
-        certifications: {
-            type: [String]
-        },
-        achievments: {
-            type: [String]
+            type: Date,
+            default: ""
+
         },
         experience: {
-            type: [String]
+            type: String,
+            default: ""
+
+        },
+        certifications: {
+            type: String,
+            default: ""
+
+        },
+        achievments: {
+            type: String,
+            default: ""
+
         },
         disciplines: {
-            type: [String]
-        }
+            type: String,
+            default: ""
+
+        },
     }
 }, {
-    // add createdAt and updatedAt from mongoose
     timestamps: true,
     toJSON: { virtuals: true },//data which are not stored directly in our database(e.g. firstNam+lastName)
     toObject: { virtuals: true }//raw object from an instance of a class (model) without additional keys
@@ -103,7 +130,7 @@ userSchema.methods.toJSON = function () {
     const user = this;
     const userObject = user.toObject();
     delete userObject.password;
-    delete userObject.__v;//tracks how many times document has been changed
+    delete userObject.__v;
     delete userObject.createdAt;
     delete userObject.updatedAt;
 
@@ -111,14 +138,14 @@ userSchema.methods.toJSON = function () {
     console.log("userObject from User model", userObject)
 }
 
-//encrypt password before storing it
-const saltRounds = 10;//hash algorythm complexity
+//encrypt password before storing 
+const saltRounds = 10;
 userSchema.pre("save", async function (next) { //this here = doc
     //make sure that password field is modified (or created). If not, skip
     if (!this.isModified("password")) return next();
-    //hash the password
+
     this.password = await bcrypt.hash(this.password, saltRounds);
-    console.log(this)
+    console.log("***", this)
     next()
 });
 
@@ -126,12 +153,10 @@ userSchema.pre("save", async function (next) { //this here = doc
 userSchema.statics.loginWithEmail = async (email, password) => {
 
     const user = await User.findOne({ email: email })
-
     if (!user) {
         throw new Error("Unable to login")
     };
-    //compare the password
-    const match = await bcrypt.compare(password.toString(), user.password);
+    const match = await bcrypt.compare(password, user.password);
     if (!match) {
         throw new Error("Unable to login")
     };
@@ -142,7 +167,7 @@ userSchema.statics.loginWithEmail = async (email, password) => {
 userSchema.methods.generateToken = async function () {
     const user = this;
     const token = jwt.sign({ id: user._id }, process.env.SECRET, { expiresIn: '7d' });
-    //save in the db
+
     user.tokens.push(token);
     await user.save({ validateBeforeSave: false });
     return token;

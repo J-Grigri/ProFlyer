@@ -2,40 +2,47 @@ const User = require('../models/User')
 const jwt = require('jsonwebtoken')
 
 exports.login = async function (req, res) {
+    const { email, password } = req.body;
+
     try {
-        const { email, password } = req.body;
         if (!email && !password) throw new Error("Email and password are required")
+
         //authenticate user
         const user = await User.loginWithEmail(email, password);
         const token = await user.generateToken()
-        console.log(user)
+
+        console.log("From login function", user, token)
+
         res.status(200).json({ status: "Success", data: { user, token } })
     } catch (err) {
-        console.log("login errors", err) // =>> to see the stack
-        res.status(400).json({ status: "fail here", message: err.message })
+
+        console.log("login error stack", err) // =>> to see the stack
+
+        res.status(401).json({ status: "fail here??", message: err.message })
     }
 }
+
 exports.logout = async function (req, res) {
     try {
         const token = req.headers.authorization.replace("Bearer ", "");
         const user = await User.updateOne({ _id: req.user._id }, { $pull: { tokens: token } });
         res.status(204).json({ status: "Success", data: null })
     } catch (err) {
+        console.log("logout error", err)
         res.status(401).json({ status: "fail", message: err.message });
     }
 }
 //authenticate with JWT
 exports.auth = async (req, res, next) => {
-    //check if the token is there
+
+
     if (!req.headers.authorization || !req.headers.authorization.startsWith("Bearer"))
         return res.status(401).json({ status: "fail", message: "Unauthorized" });
 
-    //remove "Bearer"
     const token = req.headers.authorization.replace("Bearer ", "");
     try {
-        //verify JWT. 2nd arg is secret key/signature
         const decoded = jwt.verify(token, process.env.SECRET)
-        //find user with token
+
         const user = await User.findOne({ _id: decoded.id, tokens: token })
 
         if (!user) throw new Error("Unauthorized")
