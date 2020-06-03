@@ -80,7 +80,6 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
             html: `Click <a href="https://localhost:3000/email/${token}">this link</a> to reset your proFlyer user password`,
         };
         await sgMail.send(msg);
-        console.log(`https://localhost:3000/email/${token}`)
         return res.status(200).json({
             status: "success",
             data: "A confirmation will be sent to your email address"
