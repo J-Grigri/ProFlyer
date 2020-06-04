@@ -105,7 +105,6 @@ exports.updateOne = Model => catchAsync(async (req, res, next) => {
             delete req.body[el]
         }
     });
-    console.log(req.body, "dsadsadsadsa")
     const item = await Model.findOneAndUpdate({ _id: id }, req.body, { new: true })
 
     res.status(200).json({ status: "ok", data: item })

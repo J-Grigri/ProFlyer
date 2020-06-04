@@ -12,6 +12,28 @@ exports.deleteUser = deleteOne(User);
 const { updateOne } = require("./handlerFactory");
 exports.updateUser = updateOne(User)
 
+
+
+exports.createCoachProfile = catchAsync(async (req, res) => {
+
+    const allows = ["coach.bio", "coach.inSportSince", "coach.experience", "coach.certifications", "coach.achievments", "coach.disciplines",]
+    //foreach todelete notallowed fields
+    Object.keys(req.body).forEach(el => {
+        console.log(el, "keyname")
+        if (!allows.includes(el)) {
+            delete req.body[el]
+        }
+    });
+
+    const user = await User.findOneAndUpdate({ _id: req.user._id }, {
+        ...req.body,
+        isCoach: true,
+    }, { new: true })
+    console.log("boom", user)
+
+    return res.status(200).json({ status: "Success", data: user })
+})
+
 //Register user in app
 exports.registerUser = async (req, res) => {
     const { name, email, password } = req.body
@@ -32,9 +54,6 @@ exports.registerUser = async (req, res) => {
 
 //Read user 
 exports.getUser = catchAsync(async (req, res) => {
-    // console.log(req.user)
-    // const user = await User.findOne({ _id: req.user._id }, "")
-    // console.log(user)
     return res.status(200).json({ status: "Success", data: req.user })
 })
 

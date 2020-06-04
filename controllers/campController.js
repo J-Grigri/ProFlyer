@@ -47,3 +47,9 @@ exports.createCamp = catchAsync(async function (req, res, next) {
     })
     return res.status(201).json({ status: "Success", data: camp })
 })
+
+
+exports.getSingleCamp = catchAsync(async (req, res) => {
+    const camp = await Camp.findById(req.params.campId)
+    return res.status(200).json({ status: "Success", data: camp })
+})

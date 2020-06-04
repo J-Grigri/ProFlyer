@@ -9,7 +9,8 @@ const {
     getCoachProfiles,
     getSingleCoach,
     resetPassword,
-    changePassword
+    changePassword,
+    createCoachProfile
 } = require("../controllers/userController")
 
 router
@@ -29,6 +30,10 @@ router
 router
     .route('/coaches/:id')
     .get(auth, getSingleCoach)
+
+router
+    .route('/coaches/me')
+    .put(auth, createCoachProfile)
 
 router
     .route('/coaches')

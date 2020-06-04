@@ -6,7 +6,8 @@ const {
     getCamps,
     getUserCamps,
     updateCamp,
-    deleteCamp
+    deleteCamp,
+    getSingleCamp
 } = require("../controllers/campController")
 
 router
@@ -22,6 +23,9 @@ router
     .route('/organize')
     .post(auth, createCamp)
 
+router
+    .route('/:campId')
+    .get(getSingleCamp)
 
 //PUBLIC ROUTE
 router

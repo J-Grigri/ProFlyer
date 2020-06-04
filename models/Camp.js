@@ -44,7 +44,7 @@ const campSchema = new Schema({
         type: Boolean,
         // required: [true, "Camp type is required"],
     },
-    
+
     isTunnelCamp: {
         type: Boolean,
         // required: [true, "Camp type is required"],
@@ -65,6 +65,10 @@ const campSchema = new Schema({
     toObject: { virtuals: true }//raw object from an instance of a class (model) without additional keys,
 })
 
+campSchema.pre(/^find/, async function (next) {
+    this.populate("organizer")
+    next()
+})
 
 const Camp = mongoose.model("Camp", campSchema);
 module.exports = Camp;
