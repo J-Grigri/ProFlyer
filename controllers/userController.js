@@ -29,7 +29,6 @@ exports.createCoachProfile = catchAsync(async (req, res) => {
         ...req.body,
         isCoach: true,
     }, { new: true })
-    console.log("boom", user)
 
     return res.status(200).json({ status: "Success", data: user })
 })
@@ -66,8 +65,11 @@ exports.getCoachProfiles = catchAsync(async (req, res) => {
     return res.status(200).json({ status: "Success", data: coachList })
 })
 
+//Get single coach profile
 exports.getSingleCoach = catchAsync(async (req, res) => {
-    const coach = await User.findOne({ _id: req.params.id })
+    const coach = await User.findOne({ _id: req.params.coachId })
+
+    console.log("this one", req.params)
 
     if (coach.isCoach === false) {
         res.status(404).json({ status: "fail", message: "There is no coach profile associated with this user" })

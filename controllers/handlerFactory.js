@@ -47,9 +47,11 @@ exports.deleteMany = Model => catchAsync(async (req, res) => {
 
 exports.updateOne = Model => catchAsync(async (req, res, next) => {
 
+    console.log("update camp body", req.body)
+
     let allows = []
     let id;
-    console.log(req.body)
+
     switch (Model.modelName) {
         case "User":
             allows = [
@@ -76,8 +78,9 @@ exports.updateOne = Model => catchAsync(async (req, res, next) => {
             break;
 
         case "Camp":
-            console.log("BOOOOM", req.params.cardID)
+            console.log("Case:camp", req.params.campID)
             allows = [
+
                 "isSkydiveCamp",
                 "isTunnelCamp",
                 "disciplines",
@@ -105,8 +108,8 @@ exports.updateOne = Model => catchAsync(async (req, res, next) => {
             delete req.body[el]
         }
     });
+    console.log(req.body)
     const item = await Model.findOneAndUpdate({ _id: id }, req.body, { new: true })
-
+    console.log("=-=-=-=", item)
     res.status(200).json({ status: "ok", data: item })
-
 })

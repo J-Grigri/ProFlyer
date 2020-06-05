@@ -91,7 +91,6 @@ const userSchema = new mongoose.Schema({
         bio: {
             type: String,
             default: ""
-
         },
         inSportSince: {
             type: Date,

@@ -28,7 +28,7 @@ router
     .put(auth, changePW)
 
 router
-    .route('/coaches/:id')
+    .route('/coaches/:coachId')
     .get(auth, getSingleCoach)
 
 router
